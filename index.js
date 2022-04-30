@@ -1,7 +1,9 @@
 const fs = require('fs');
 const inquirer = require('inquirer');
+const mysql = require('mysql2');
+require('console.table');
 
-const questions = [
+const mainMenu = [
     {
         type: 'list',
         name: 'mainMenu',
@@ -11,8 +13,7 @@ const questions = [
 ]
 
 const init = () => {
-    inquirer.prompt(questions).then((data) => {
-        console.log(questions);
-    ``
+    inquirer.prompt(mainMenu).then((data) => {
+    
     })
 }
