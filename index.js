@@ -34,7 +34,7 @@ const mainMenu = () => {
     })
 
     .then(function(menuChoice) {
-        console.log(menuChoice);
+        // console.log(menuChoice);
         if (menuChoice.menu === 'View All Employees') {
             viewAllEmployees();
         }
@@ -59,19 +59,39 @@ const mainMenu = () => {
     })
 }
 
-// function viewAllEmployees() {
-//     console.log("Viewing All Employees:")
-//     const sql = 'SELECT * FROM employee'
-//     db.query(sql, (err, rows) => {
-//         if (err) {
-//             return;
-//         }
-//         res.json({
-//             message: 'success',
-//             data:rows
-//         });
-//     }
-// )}
+function viewAllEmployees() {
+    console.log("Viewing All Employees:");
+    const sql = `SELECT
+  empInfo.id,
+  empInfo.first_name AS 'first name',
+  empInfo.last_name AS 'last name',
+  role.title AS 'job title',
+  department.name AS 'department',
+  role.salary,
+  CONCAT (manager.first_name, ' ', manager.last_name) AS 'manager'
+FROM
+  empInfo
+  JOIN role ON empInfo.role_id = role.id
+  JOIN department ON role.department_id = department.id
+  LEFT JOIN empInfo manager ON manager.id = empInfo.manager_id;`;
+    connection.query(sql, function (err, rows) {
+        if (err) throw err;
+        console.table(res);
+
+        mainMenu();
+    })
+}
+
+function viewAllRoles() {
+    console.log("Viewing All Roles:");
+    const sql = 'SELECT * FROM role;';
+    connection.query(sql, function (err, res) {
+        if (err) throw err;
+        console.table(res);
+
+        mainMenu();
+    })
+}
 
 function viewAllDepartments() {
     console.log("Viewing All Departments:");
@@ -84,8 +104,55 @@ function viewAllDepartments() {
     })
 }
 
-// const init = () => {
-//     inquirer.prompt(mainMenu).then((data) => {
-    
-//     })
-// }
+// const sql = 
+
+function addAnEmployee() {
+    console.log("Add an employee:");
+    const sql = 'SELECT * FROM role;'
+    connection.query(sql, function (err, res) {
+        if (err) throw err;
+        const chooseRoles = [];
+        for (let i = 0; i < res.length; i++) {
+            const chooseRole = {
+            name: res[i].title,
+            value: res[i].id,
+            };
+            chooseRoles.push(chooseRole);
+        }
+
+        const questions = [
+            {
+            type: "input",
+            name: "first_name",
+            message: "What is the employees first name?",
+            },
+            {
+            type: "input",
+            name: "last_name",
+            message: "What is the employees last name?",
+            },
+            {
+            type: "list",
+            pagesize: 12,
+            name: "role",
+            message: "What is the employees role?",
+            choices: chooseRoles,
+            },
+            {
+            type: "list",
+            name: "manager",
+            message: "Who is the employee's manager?",
+            choices: [{name: "None", value: "null"}, "John Doe"],
+            },
+        ];
+
+        inquirer.prompt(questions).then(function(answers) {
+            const sql ="INSERT INTO empInfo (first_name, last_name, role_id,manager_id) VALUES (?,?,?,?);";
+            connection.query(sql, [answers.first_name, answers.last_name, answers.role, answers.manager], function(err, res) {
+                if(err) console.log(err);
+                console.log("Employee added to database");
+                mainMenu();
+            })
+        });
+    });
+}
