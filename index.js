@@ -110,6 +110,7 @@ function addAnEmployee() {
     console.log("Add an employee:");
     const sql = 'SELECT * FROM role;'
     connection.query(sql, function (err, res) {
+        console.log(res);
         if (err) throw err;
         const chooseRoles = [];
         for (let i = 0; i < res.length; i++) {
@@ -133,26 +134,39 @@ function addAnEmployee() {
             },
             {
             type: "list",
-            pagesize: 12,
             name: "role",
             message: "What is the employees role?",
-            choices: chooseRoles,
+            choices: chooseRoles
             },
-            {
-            type: "list",
-            name: "manager",
-            message: "Who is the employee's manager?",
-            choices: [{name: "None", value: "null"}, "John Doe"],
-            },
+            // {
+            // type: "list",
+            // name: "manager",
+            // message: "Who is the employee's manager?",
+            // choices: [{name: "None", values: "null"}, "John Doe"],
+            // },
         ];
 
         inquirer.prompt(questions).then(function(answers) {
-            const sql ="INSERT INTO empInfo (first_name, last_name, role_id,manager_id) VALUES (?,?,?,?);";
+            const sql = "INSERT INTO empInfo (first_name, last_name, role_id, manager_id) VALUES (?,?,?,?);";
             connection.query(sql, [answers.first_name, answers.last_name, answers.role, answers.manager], function(err, res) {
                 if(err) console.log(err);
                 console.log("Employee added to database");
                 mainMenu();
             })
-        });
-    });
+        })
+    })
+}
+
+function addDepartment() {
+    console.log("Add a department:");
+    const sql = 'INSERT INTO department (name) VALUES (?);';
+    inquirer.prompt(
+        {
+            type: 'input',
+            name: 'department',
+
+    })
+    
+    connection.query(sql, params, )
+    
 }

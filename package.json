@@ -21,7 +21,7 @@
     "console.table": "^0.10.0",
     "dotenv": "^16.0.0",
     "fs": "^0.0.1-security",
-    "inquirer": "^8.2.3",
+    "inquirer": "7.0.0",
     "mysql2": "^2.3.3"
   }
 }
