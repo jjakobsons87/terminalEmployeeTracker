@@ -23,22 +23,3 @@ CREATE TABLE empInfo (
     manager_id INTEGER NULL,
     CONSTRAINT fk_role FOREIGN KEY (role_id) REFERENCES role(id) 
 );
-
--- SELECT empInfo.*, empRole.title 
--- FROM empInfo 
--- LEFT JOIN role 
--- ON employeeInfo.role_id = empRole.id;
-
--- SELECT
---   empInfo.id,
---   empInfo.first_name AS 'first name',
---   empInfo.last_name AS 'last name',
---   role.title AS 'job title',
---   department.name AS 'department',
---   role.salary,
---   CONCAT (manager.first_name, ' ', manager.last_name) AS 'manager'
--- FROM
---   empInfo
---   JOIN role ON empInfo.role_id = role.id
---   JOIN department ON role.department_id = department.id
---   LEFT JOIN empInfo manager ON manager.id = empInfo.manager_id;

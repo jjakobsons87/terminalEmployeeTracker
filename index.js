@@ -93,8 +93,6 @@ function viewAllDepartments() {
     })
 }
 
-// const sql = 
-
 function addAnEmployee() {
     console.log("Add an employee:");
     const sql = 'SELECT * FROM role;'
@@ -122,7 +120,6 @@ function addAnEmployee() {
                 chooseMgrs.push(chooseMgr);
             }
         
-
             const questions = [
                 {
                 type: "input",
@@ -182,25 +179,45 @@ function addDepartment() {
 // still need 
 function addRole() {
     console.log("Add a Role:");
-    const sql = '';
-    inquirer.prompt(
-        {
+    const sql = 'SELECT * FROM department;';
+    connection.query(sql, function(err, res) {
+        if(err) throw err;
+        const chooseDepts = [];
+        for (let i = 0; i < res.length; i++) {
+            const chooseDept = {
+                name: res[i].name,
+                value: res[i].id
+            }
+            chooseDepts.push(chooseDept);
+        }
+        const questions = [
+            {
             type: 'input',
             name: 'roleName',
             message: 'What is the name of the role you want to add?'
-        },
-        {
+            },
+            {
             type: 'input',
             name: 'salary',
             message: 'What is the Salary of the role?'
-        },
-        {
+            },
+            {
             type: 'list',
             name: 'department',
             message: 'What department does this role belong to?',
-            choices: listDept
-        }
-    )
+            choices: chooseDepts
+            }
+        ];
+
+        inquirer.prompt(questions).then(function(answers) {
+            const sql = 'INSERT INTO role (title, salary, department_id) VALUES (?,?,?);';
+            connection.query(sql, [answers.roleName, answers.salary, answers.department], function(err, res) {
+                if(err) console.log(err);
+                console.log("role has been added to the database");
+                mainMenu();
+            })
+        })
+    })
 }
 
 function updateEmployeeRole() {
