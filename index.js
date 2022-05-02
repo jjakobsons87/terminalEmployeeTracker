@@ -166,7 +166,6 @@ function addDepartment() {
             message: 'What is the name of the department you want to add?'
     })
     .then(function(answers) {
-        console.log(answers);
         const sql = 'INSERT INTO department (name) VALUES (?);';
         connection.query(sql, [answers.department], function(err, res) {
             if(err) console.log(err);
@@ -176,7 +175,6 @@ function addDepartment() {
     })
 }
 
-// still need 
 function addRole() {
     console.log("Add a Role:");
     const sql = 'SELECT * FROM department;';
@@ -221,6 +219,37 @@ function addRole() {
 }
 
 function updateEmployeeRole() {
+    const sql = 'SELECT * FROM empInfo;';
+    const sqlRole = 'SELECT * FROM role;';
+    connection.query(sql, function(err, res) {
+        if(err) throw err;
+        const chooseEmployees = [];
+        for (let i = 0; i < res.length; i++) {
+            const chooseEmployee = {
+                name: `${res[i].first_name} ${res[i].last_name}`,
+                value: res[i].id
+            }
+            chooseEmployees.push(chooseEmployee);
+        }
+    
+        connection.query(sqlRole, function(err, res) {
+            if(err) throw err;
+            const chooseRoles = [];
+            for (let i = 0; i < res.length; i++) {
+                const chooseRole = {
+                    name: res[i].title,
+                    value: res[i].id
+                }
+                chooseRoles.push(chooseRole);
+            }
+
+            const questions = [
+                {
+
+                }
+            ]
+        })
+    })
 
 }
 
