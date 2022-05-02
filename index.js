@@ -164,11 +164,14 @@ function addDepartment() {
             type: 'input',
             name: 'department',
             message: 'What is the name of the department you want to add?'
-    })
+        }
+    )
+    
     .then(function(answers) {
+        console.log(answers);
         const sql = 'INSERT INTO department (name) VALUES (?);';
         connection.query(sql, [answers.department], function(err, res) {
-            if(err) console.log(err);
+            if(err) throw err;
             console.log("Department added to database");
             mainMenu();
         });
@@ -208,10 +211,10 @@ function addRole() {
         ];
 
         inquirer.prompt(questions).then(function(answers) {
-            const sql = 'INSERT INTO role (title, salary, department_id) VALUES (?,?,?);';
-            connection.query(sql, [answers.roleName, answers.salary, answers.department], function(err, res) {
+            const sqlRole = 'INSERT INTO role (title, salary, department_id) VALUES (?,?,?);';
+            connection.query(sqlRole, [answers.roleName, answers.salary, answers.department], function(err, res) {
                 if(err) console.log(err);
-                console.log("role has been added to the database");
+                console.log("The new role has been added to the database");
                 mainMenu();
             })
         })
@@ -245,11 +248,27 @@ function updateEmployeeRole() {
 
             const questions = [
                 {
-
+                    type: 'list',
+                    name: 'employee',
+                    message: 'Which Employee do you want to update?',
+                    choices: chooseEmployees
+                },
+                {
+                    type: 'list',
+                    name: 'role',
+                    message: 'Which role do you want to assign to this employee?',
+                    choices: chooseRoles
                 }
-            ]
+            ];
+
+            inquirer.prompt(questions).then(function(answers) {
+                const sql = 'UPDATE empInfo SET role_id = ? WHERE id = ?;';
+                connection.query(sql, [answers.role, answers.employee], function(err, res) {
+                    if(err) throw err;
+                    console.log("Employee role updated.");
+                    mainMenu();
+                })
+            })
         })
     })
-
 }
-
