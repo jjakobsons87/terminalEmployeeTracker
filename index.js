@@ -29,7 +29,7 @@ const mainMenu = () => {
             'View All Roles', 
             'View All Departments', 
             'Add an Employee', 
-            'Add a department', 
+            'Add a Department', 
             'Add a Role', 
             'Update an Employee Role']
     })
@@ -98,7 +98,7 @@ function addAnEmployee() {
     const sql = 'SELECT * FROM role;'
     const sqlMgr = 'SELECT * FROM empInfo;'
     connection.query(sql, function (err, res) {
-        console.log(res);
+        // console.log(res);
         if (err) throw err;
         const chooseRoles = [];
         for (let i = 0; i < res.length; i++) {
@@ -162,15 +162,13 @@ function addDepartment() {
     inquirer.prompt(
         {
             type: 'input',
-            name: 'department',
-            message: 'What is the name of the department you want to add?'
+            name: 'newDepartment',
+            message: 'What is the name of the department you want to add?',
         }
     )
-    
     .then(function(answers) {
-        console.log(answers);
         const sql = 'INSERT INTO department (name) VALUES (?);';
-        connection.query(sql, [answers.department], function(err, res) {
+        connection.query(sql, [answers.newDepartment], function(err, res) {
             if(err) throw err;
             console.log("Department added to database");
             mainMenu();
